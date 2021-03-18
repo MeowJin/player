@@ -1,0 +1,29 @@
+{
+	"pages": [{
+		"path": "pages/index/index",
+		"style": {
+			"navigationBarTitleText": "黑喵音乐"
+		}
+	}, {
+		"path": "pages/playlist/index",
+		"style": {
+			"navigationBarTitleText": "歌单",
+			"navigationStyle": "custom"
+		}
+	}, {
+		"path": "pages/player/index",
+		"style": {
+			"navigationBarTitleText": "黑喵音乐",
+			"navigationStyle": "custom"
+		}
+	}],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "黑喵音乐",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8",
+		"app-plus": {
+			"background": "#efeff4"
+		}
+	}
+}

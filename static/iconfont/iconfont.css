@@ -1,12 +1,11 @@
 @font-face {
-	font-family: 'iconfont';
-	/* project id 2423256 */
-	src: url('//at.alicdn.com/t/font_2423256_yzeieujkw6l.eot');
-	src: url('//at.alicdn.com/t/font_2423256_yzeieujkw6l.eot?#iefix') format('embedded-opentype'),
-		url('//at.alicdn.com/t/font_2423256_yzeieujkw6l.woff2') format('woff2'),
-		url('//at.alicdn.com/t/font_2423256_yzeieujkw6l.woff') format('woff'),
-		url('//at.alicdn.com/t/font_2423256_yzeieujkw6l.ttf') format('truetype'),
-		url('//at.alicdn.com/t/font_2423256_yzeieujkw6l.svg#iconfont') format('svg');
+	 font-family: 'iconfont';  /* project id 2423256 */
+	  src: url('//at.alicdn.com/t/font_2423256_huh7w4chlkg.eot');
+	  src: url('//at.alicdn.com/t/font_2423256_huh7w4chlkg.eot?#iefix') format('embedded-opentype'),
+	  url('//at.alicdn.com/t/font_2423256_huh7w4chlkg.woff2') format('woff2'),
+	  url('//at.alicdn.com/t/font_2423256_huh7w4chlkg.woff') format('woff'),
+	  url('//at.alicdn.com/t/font_2423256_huh7w4chlkg.ttf') format('truetype'),
+	  url('//at.alicdn.com/t/font_2423256_huh7w4chlkg.svg#iconfont') format('svg');
 }
 
 .iconfont {
@@ -17,27 +16,70 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.iconcomment:before {
+  content: "\e608";
+}
+
+.iconplay-simple:before {
+  content: "\e769";
+}
+
+.iconlast:before {
+  content: "\e78a";
+}
+
+.iconnext:before {
+  content: "\e7a5";
+}
+
+.iconshare:before {
+  content: "\e7de";
+}
+
+.icondownload:before {
+  content: "\e823";
+}
+
+.iconheart-hollow:before {
+  content: "\e82a";
+}
+
+.iconheart-solid:before {
+  content: "\e82b";
+}
+
+.iconlist:before {
+  content: "\e6a7";
+}
+
+.iconsingle:before {
+  content: "\e6ae";
+}
+
+.iconrandom:before {
+  content: "\e6b0";
+}
+
+.iconorder:before {
+  content: "\e65d";
+}
 
 .iconhome:before {
-	content: "\e607";
+  content: "\e607";
 }
 
-.iconfanhui:before {
-	content: "\e609";
-}
-
-.iconplay1:before {
-	content: "\e771";
+.icongoback:before {
+  content: "\e609";
 }
 
 .iconplay:before {
-	content: "\e66b";
+  content: "\e66b";
 }
 
 .iconstop:before {
-	content: "\e66c";
+  content: "\e66c";
 }
 
 .iconsearch:before {
-	content: "\e617";
+  content: "\e617";
 }

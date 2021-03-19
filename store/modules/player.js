@@ -1,10 +1,16 @@
 const player = {
 	state: {
+		playlist: {},
 		music: {},
 	},
 	mutations: {
 		saveMusic: (state, data) => {
-			state.music = data;
+			const {
+				playlist,
+				music
+			} = data;
+			state.playlist = playlist;
+			state.music = music;
 		}
 	},
 	actions: {

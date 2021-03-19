@@ -7,8 +7,6 @@
 		<view class="pic-wrapper">
 			<view class="pic_inner">
 				<image class="pic" :src="music.al.picUrl" mode="aspectFill"></image>
-				<text v-if='paused' class="iconfont iconplay" @click="()=>onPaused(true)"></text>
-				<text v-if='!paused' class="iconfont iconstop" @click="()=>onPaused(false)"></text>
 			</view>
 		</view>
 		<view class="lyric-wrapper" id='lyric' ref='lyric'>
@@ -17,45 +15,93 @@
 			</view>
 		</view>
 		<view class="progress">
-			<slider activeColor="#FFCC33" backgroundColor="#000000" block-color="#8A6DE9" block-size="18" :max="duration" :value="currentTime"
-			 @change="currentChange" />
+			<text class="time">{{time.current}}</text>
+			<slider class="slider" activeColor="#FB393E" backgroundColor="#fff" block-color="#eee" block-size="12" :max="duration"
+			 :value="currentTime" @change="currentChange" />
+			<text class="time">{{time.all}}</text>
+		</view>
+
+		<view class="operate">
+			<view class="pattern inline-block" @click="changePattern()">
+				<text v-if="pattern===1" class="iconfont iconorder"></text>
+				<text v-if='pattern===2' class="iconfont iconrandom"></text>
+				<text v-if="pattern===3" class="iconfont iconsingle"></text>
+
+			</view>
+			<view @click="goLast()">
+				<text class="iconfont iconlast"></text>
+			</view>
+
+			<view class="play inline-block">
+				<text v-if='paused' class="iconfont iconplay" @click="()=>onPaused(true)"></text>
+				<text v-if='!paused' class="iconfont iconstop" @click="()=>onPaused(false)"></text>
+			</view>
+			<view @click="goNext()">
+				<text class="iconfont iconnext"></text>
+			</view>
+			<view>
+				<text class="iconfont iconlist"></text>
+			</view>
 		</view>
 	</view>
-
 </template>
 
 <script>
 	import request from '../../utils/request.js';
 	import audio from '../../utils/audio.js';
 	import Goback from '../../components/goback/index.vue';
+	import {
+		sec_to_time,
+		time_to_sec
+	} from '../../utils/utils.js'
 
 	export default {
 		data() {
 			return {
-				music: {},
+				playlist: {}, //歌单
+				music: {}, //当前播放歌曲
 				innerAudioContext: {},
 				interval: {},
 				currentTime: 0, //当前播放时间
+				time: {
+					current: '00:00',
+					all: ''
+				},
 				duration: 0, //总时长		
 				paused: false, //是否暂停
+
 				lyricList: [], //歌词				
 				lyricIndex: 0, //当前歌词索引，用于高亮显示
-				scrollTop: 0, //歌词滚动高度
+				scrollTop: 0, //歌词滚动高度,
+				pattern: 1, //播放模式
+				patternOptions: [{
+					value: 1,
+					name: '顺序'
+				}, {
+					value: 2,
+					name: '随机'
+				}, {
+					value: 3,
+					name: '单曲'
+				}]
 			}
 		},
 		components: {
 			Goback
 		},
 		onLoad() {
+			console.log('player', this.$store.state.player);
+			this.playlist = this.$store.state.player.playlist;
 			this.music = this.$store.state.player.music;
 			this.duration = this.$store.state.player.music.dt / 1000;
-			this.init(this.$store.state.player.music);
+			this.initMusic(this.$store.state.player.music);
+			this.time.all = sec_to_time(this.duration);
 		},
 		onUnload() {
 			this.onStop();
 		},
 		methods: {
-			init(song) {
+			initMusic(song) {
 				//更改标题为歌曲名
 				uni.setNavigationBarTitle({
 					title: song.name
@@ -82,10 +128,7 @@
 					const list = arr.map(item => {
 						const li = item.split(']');
 						const time = li[0].substr(1, li[0].length);
-						const timeArr = time.split(':');
-						const minute = timeArr[0];
-						const secondArr = timeArr[1].split('.')
-						const duration = parseFloat(minute * 60 + parseInt(secondArr[0])) + parseFloat('0.' + secondArr[1])
+						const duration = time_to_sec(time)
 						return {
 							time,
 							duration,
@@ -110,23 +153,97 @@
 					this.innerAudioContext.pause();
 				}
 			},
+			goLast() {
+				const music = this.getPlayMusic(1);
+				if (music) {
+					this.initMusic(music)
+				}
+			},
+			goNext() {
+				const music = this.getPlayMusic(2);
+				if (music) {
+					this.initMusic(music)
+				}
+			},
+			getPlayMusic(type) {
+				const {
+					tracks
+				} = this.playlist;
+				const index = tracks.findIndex(p => p.id === this.music.id);
+				if (this.pattern === 1) { //顺序				
+					if (type === 1) { //上一首
+						if (index > 0) {
+							return tracks[index - 1];
+						}
+						uni.showToast({
+							title: '当前为第一首',
+							icon: 'none'
+						})
+						return null;
+					}
+					if (type === 2) { //下一首
+						if (index < tracks.length) {
+							return tracks[index + 1];
+						}
+						uni.showToast({
+							title: '当前为最后一首',
+							icon: 'none'
+						})
+						return null;
+					}
+				}
+				if (this.pattern === 2) { //随机
+					if (type === 1) { //上一首
+						if (index > 0) {
+							return tracks[index - 1];
+						}
+						uni.showToast({
+							title: '当前为第一首',
+							icon: 'none'
+						})
+						return null;
+					}
+					if (type === 2) { //下一首
+						if (index < tracks.length) {
+							return tracks[index + 1];
+						}
+						uni.showToast({
+							title: '当前为最后一首',
+							icon: 'none'
+						})
+						return null;
+					}
+				}
+			},
 			currentChange(e) {
 				const {
 					target: {
 						value
 					}
 				} = e;
-				this.currentTime = value;
+				this.changeCurrentTime(value);
 				if (this.innerAudioContext.paused) {
 					this.innerAudioContext.play();
 				}
 				this.innerAudioContext.seek(value);
 				this.resetInterval();
 			},
+			changeCurrentTime(value) {
+				this.currentTime = value;
+				const current = sec_to_time(value);
+				this.time.current = current;
+			},
+			changePattern() {
+				if (this.pattern >= this.patternOptions.length) {
+					this.pattern = 1;
+				} else {
+					this.pattern += 1;
+				}
+			},
 			startInterval() {
 				this.interval = setInterval(() => {
 					const currentTime = this.innerAudioContext.currentTime;
-					this.currentTime = parseInt(currentTime);
+					this.changeCurrentTime(parseInt(currentTime))
 					this.paused = this.innerAudioContext.paused;
 					if (currentTime >= this.duration) {
 						this.stopInterval();
@@ -228,21 +345,12 @@
 					animation: 10s rotate infinite linear;
 				}
 			}
-
-			.iconfont {
-				font-size: 180rpx;
-				color: #fff;
-				position: absolute;
-				top: calc(50% - 90rpx);
-				left: calc(50% - 90rpx);
-			}
-
 		}
 
 		.lyric-wrapper {
 			color: #fff;
 			text-align: center;
-			height: 30vh;
+			height: 20vh;
 			overflow: scroll;
 			margin-top: 100rpx;
 			scroll-behavior: smooth;
@@ -259,9 +367,41 @@
 		}
 
 		.progress {
-			position: fixed;
-			bottom: 10rpx;
-			width: 100%;
+			padding: 0 20rpx;
+			display: flex;
+			align-items: center;
+
+			.time {
+				color: #fff;
+			}
+
+			.slider {
+				display: inline-block;
+				width: 100%;
+			}
+		}
+
+		.operate {
+			color: #fff;
+			display: flex;
+			align-items: center;
+			flex-direction: row;
+			padding: 0 20px;
+			text-align: center;
+
+			.iconfont {
+				font-size: 50rpx;
+			}
+
+			.play {
+				.iconfont {
+					font-size: 150rpx;
+				}
+			}
+		}
+
+		.operate>uni-view {
+			flex: 1;
 		}
 	}
 

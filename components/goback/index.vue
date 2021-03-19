@@ -1,7 +1,7 @@
 <template>
 	<view class="status">
 		<view class='goback'>
-			<text class="iconfont iconfanhui" @click="goback()"></text>
+			<text class="iconfont icongoback" @click="goback()"></text>
 			<text class="iconfont iconhome" @click="gohome()"></text>
 		</view>
 	</view>
@@ -40,7 +40,7 @@
 				vertical-align: sub;
 			}
 
-			.iconfanhui {
+			.icongoback {
 				border: 1rpx solid rgba(255, 255, 255, 0.4);
 				border-right: 0;
 				border-radius: 50% 0 0 50%;
@@ -48,7 +48,7 @@
 				padding-right: 25rpx;
 			}
 
-			.iconfanhui::after {
+			.icongoback::after {
 				content: '';
 				display: inline-block;
 				height: 60%;

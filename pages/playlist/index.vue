@@ -5,6 +5,7 @@
 		<view class="introduction">
 			<view class="left">
 				<view class="play-count">
+					<text class="iconfont iconplay-simple"></text>
 					<text>{{playlist.playCountUnit}}</text>
 				</view>
 				<image class="left_img" mode="aspectFill" :src="playlist.coverImgUrl"></image>
@@ -55,9 +56,6 @@
 				const {
 					id
 				} = data; //榜单ID
-				request(`/playlist/detail/dynamic?id=${id}`).then(res => {
-					console.log('歌单', res);
-				})
 				request(`/playlist/detail?id=${id}`).then(res => {
 					const {
 						playlist
@@ -78,10 +76,14 @@
 				})
 			},
 			onPlay(row) {
+				const params = {
+					playlist: this.playlist,
+					music: row
+				};
 				uni.navigateTo({
 					url: `../player/index`
 				})
-				this.$store.commit('saveMusic', row)
+				this.$store.commit('saveMusic', params)
 			},
 			playAll() {
 				console.log('播放全部');
@@ -112,6 +114,10 @@
 					right: 10rpx;
 					z-index: 9999;
 					color: #fff;
+
+					.iconfont {
+						padding-right: 5rpx;
+					}
 				}
 
 				.left_img {

@@ -18,4 +18,8 @@
 		height: var(--status-bar-height);
 		width: 100%;
 	}
+	
+	.inline-block{
+		display: inline-block;
+	}
 </style>

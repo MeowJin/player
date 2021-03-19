@@ -66,6 +66,49 @@ function addChineseUnit(number, decimalDigit) {
 }
 
 
+/**
+ * 时间转为秒
+ * @param time 时间(00:00)
+ * @returns {string} 时间戳（单位：秒）
+ */
+const time_to_sec = function(time) {
+	var s = '';
+	const timeArr = time.split(':');
+	const min = timeArr[0];
+	const sec = timeArr[1]
+
+	s = Number(min * 60) + Number(sec);
+
+	return s;
+};
+
+/**
+ * 时间秒数格式化
+ * @param s 时间戳（单位：秒）
+ * @returns {*} 格式化后的分秒
+ */
+const sec_to_time = function(s) {
+	var t;
+	if (s > -1) {
+		var hour = Math.floor(s / 3600);
+		var min = Math.floor(s / 60) % 60;
+		var sec = s % 60;
+
+		if (min < 10) {
+			t = "0" + min + ':';
+		} else {
+			t = min + ':'
+		}
+		if (sec < 10) {
+			t += "0";
+		}
+		t += sec.toFixed(0);
+	}
+	return t;
+}
+
 export {
 	addChineseUnit, //为数字加上单位
+	time_to_sec, //时间转为秒
+	sec_to_time, //时间秒数格式化
 }

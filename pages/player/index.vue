@@ -1,5 +1,7 @@
 <template>
 	<view class="container">
+		<view class="status_bar"></view>
+		<goback />
 		<view class="bg" :style="{'--background':'url('+music.al.picUrl+')'}">
 		</view>
 		<view class="pic-wrapper">
@@ -25,6 +27,7 @@
 <script>
 	import request from '../../utils/request.js';
 	import audio from '../../utils/audio.js';
+	import Goback from '../../components/goback/index.vue';
 
 	export default {
 		data() {
@@ -39,6 +42,9 @@
 				lyricIndex: 0, //当前歌词索引，用于高亮显示
 				scrollTop: 0, //歌词滚动高度
 			}
+		},
+		components: {
+			Goback
 		},
 		onLoad() {
 			this.music = this.$store.state.player.music;
@@ -181,17 +187,21 @@
 	@import '../../static/iconfont/iconfont.css';
 
 	.container {
+		overflow: hidden;
+
 		.bg {
 			position: fixed;
 			height: 100vh;
 			width: 100vw;
 			filter: blur(20px);
 			z-index: -99;
-			background-image: var(--background);
-			background-size: cover;
-			background-repeat: no-repeat;
-			background-position: top;
-			background-attachment: fixed;
+			// background-image: var(--background);
+			// background-size: cover;
+			// background-repeat: no-repeat;
+			// background-position: top;
+			// background-attachment: fixed;
+			transform: scale(1.2);
+			background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), var(--background) no-repeat center center fixed;
 		}
 
 		.pic-wrapper {
@@ -218,6 +228,15 @@
 					animation: 10s rotate infinite linear;
 				}
 			}
+
+			.iconfont {
+				font-size: 180rpx;
+				color: #fff;
+				position: absolute;
+				top: calc(50% - 90rpx);
+				left: calc(50% - 90rpx);
+			}
+
 		}
 
 		.lyric-wrapper {
@@ -237,14 +256,6 @@
 					transition: .2s all;
 				}
 			}
-		}
-
-		.iconfont {
-			font-size: 180rpx;
-			color: #fff;
-			position: absolute;
-			top: calc(50% - 90rpx);
-			left: calc(50% - 90rpx);
 		}
 
 		.progress {

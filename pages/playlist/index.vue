@@ -1,11 +1,12 @@
 <template>
-	<view class="container">
+	<view class="container" :class="'type-'+playlist.ToplistType">
+		<view class="status_bar"></view>
+		<goback />
 		<view class="introduction">
 			<view class="left">
 				<view class="play-count">
 					<text>{{playlist.playCountUnit}}</text>
 				</view>
-
 				<image class="left_img" mode="aspectFill" :src="playlist.coverImgUrl"></image>
 			</view>
 			<view class="content">
@@ -13,9 +14,10 @@
 				<view class="description">{{playlist.description}}</view>
 			</view>
 		</view>
-
 		<view class="music">
-			<view class="play-all">播放全部
+			<view class="play-all" @click="playAll()">
+				<text class="iconfont iconplay"></text>
+				播放全部
 				<text class="play-all_count">(共{{playlist.trackCount}}首)</text>
 			</view>
 			<view class="music-item" v-for="(item,index) in playlist.tracks" @click="()=>onPlay(item)">
@@ -34,12 +36,16 @@
 	import {
 		addChineseUnit
 	} from '../../utils/utils.js'
+	import Goback from '../../components/goback/index.vue';
 
 	export default {
 		data() {
 			return {
 				playlist: {}
 			}
+		},
+		components: {
+			Goback
 		},
 		onLoad(data) {
 			this.init(data);
@@ -49,6 +55,9 @@
 				const {
 					id
 				} = data; //榜单ID
+				request(`/playlist/detail/dynamic?id=${id}`).then(res => {
+					console.log('歌单', res);
+				})
 				request(`/playlist/detail?id=${id}`).then(res => {
 					const {
 						playlist
@@ -73,18 +82,24 @@
 					url: `../player/index`
 				})
 				this.$store.commit('saveMusic', row)
+			},
+			playAll() {
+				console.log('播放全部');
 			}
 		}
 	}
 </script>
 
 <style lang="scss">
+	@import '../../static/iconfont/iconfont.css';
+
 	.container {
-		background: #eee;
+		background: #EEEEEE;
 		height: 100%;
 
 		.introduction {
-			padding: 200rpx 40rpx 50rpx;
+			padding: 50rpx 40rpx;
+			display: flex;
 
 			.left {
 				width: 35vw;
@@ -108,16 +123,13 @@
 			}
 
 			.content {
-				padding-left: 37vw;
-				display: inline-block;
-				vertical-align: top;
-				position: absolute;
-				top: 220rpx;
-				color: rgba(0, 0, 0, 0.7);
+				padding: 20rpx;
+				color: rgba(255, 255, 255, 0.6);
 
 				.name {
 					font-size: 36rpx;
 					margin-bottom: 20rpx;
+					color: #fff;
 				}
 
 				.description {
@@ -132,8 +144,14 @@
 			background: #fff;
 
 			.play-all {
-				padding-bottom: 50rpx;
-				padding-left: 50rpx;
+				padding-bottom: 40rpx;
+				padding-left: 30rpx;
+
+				.iconfont {
+					font-size: 46rpx;
+					vertical-align: middle;
+					margin-right: 10rpx;
+				}
 
 				.play-all_count {
 					color: rgba(0, 0, 0, 0.4);
@@ -169,5 +187,21 @@
 			}
 		}
 
+	}
+
+	.type-S {
+		background: #4E7CB7 !important;
+	}
+
+	.type-N {
+		background: #419B99;
+	}
+
+	.type-O {
+		background: #AC405E;
+	}
+
+	.type-H {
+		background: #994B3E;
 	}
 </style>
